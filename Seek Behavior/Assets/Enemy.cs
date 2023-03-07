@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float time2 = 1;
     [SerializeField] private float angle;
     [SerializeField] private float T = 2;
+    [SerializeField] private float slowingRadios;
 
     public PLayer player;
 
@@ -35,7 +36,6 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private SteeringType type = SteeringType.Seek;
     private Dictionary<string, Action> actions = new Dictionary<string, Action>();
-    [SerializeField] private float slowingRadios;
 
     //Son delegados que no aceptan ningun parametro uelven ningun valor
 
@@ -122,20 +122,20 @@ public class Enemy : MonoBehaviour
         Move(steering);
 
         Vector3 circlecent = velocity.normalized * cirdist;
+        Vector3 circlepos = transform.position + circlecent;
+        Debug.DrawLine(transform.position, circlepos,Color.red);
 
-        //Quaternion representa la rotacion de un angulo
         
         Vector3 displacement = Vector3.forward * circleradius;
         Quaternion rotate = Quaternion.AngleAxis(angle, displacement);
         displacement= rotate * displacement;
+        Debug.DrawLine(circlepos, circlepos + displacement, Color.blue);
 
         Vector3 wanderforce = circlecent + displacement;
+        Debug.DrawLine(transform.position, transform.position + wanderforce,Color.red);
 
-        Vector3 circlepos = transform.position + circlecent;
 
 
-        Debug.DrawLine(transform.position, transform.position + circlecent,Color.red);
-        Debug.DrawLine(circlepos, circlepos + displacement, Color.blue);
     }
         
     void CalculatePursuit()
