@@ -462,9 +462,9 @@ MonoBehaviour:
   circleradius: 2
   targetChange: {x: 0, y: 0, z: 0}
   anglec: 5
-  sp: {fileID: 2040518820}
   speed: 2
   maxspeed: 4
+  seekTarget: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

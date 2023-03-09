@@ -21,15 +21,16 @@ public class SteeringBehavior_MCP : MonoBehaviour
     [SerializeField] private float circleradius;
     [SerializeField] private Vector3 targetChange;
     [SerializeField] private float anglec = 0;
-    [SerializeField] private Transform sp;
+    //[SerializeField] private Transform sp;
     private Vector3 targetwander;
     private Vector3 wanderforce;
-    
+
 
 
     [Header("Seek & Run Away")]
-    [SerializeField] private float speed;
-    [SerializeField] private float maxspeed;
+    [SerializeField] private float speed = 2;
+    [SerializeField] private float maxspeed = 2;
+    public Vector3 seekTarget;
 
 
 
@@ -67,7 +68,8 @@ public class SteeringBehavior_MCP : MonoBehaviour
 
     void CalculateSeek()
     {
-        steering = Seek(target.position);
+        seekTarget = target.position;
+        steering = Seek(seekTarget);
 
         Move(steering);
     }
@@ -91,7 +93,8 @@ public class SteeringBehavior_MCP : MonoBehaviour
 
     void CalculateRunAway()
     {
-        steering = Seek(target.position);
+        seekTarget = target.position;
+        steering = Seek(seekTarget);
 
         Move(steering * -1);
     }
@@ -99,8 +102,8 @@ public class SteeringBehavior_MCP : MonoBehaviour
 
     void CalculateWander()
     {
-        Vector3 target2 = targetwander;
-        
+        seekTarget = targetwander;
+
         Vector3 circenter = Vector3.Normalize(velocity) * circledistance;
         Vector3 circlepos = transform.position + circenter;
         Debug.DrawLine(transform.position, circlepos, Color.green);
@@ -115,9 +118,9 @@ public class SteeringBehavior_MCP : MonoBehaviour
         Debug.DrawLine(transform.position, transform.position + wanderforce, Color.red);
 
 
-        
 
-        steering = Seek(wanderforce) + Seek(targetwander);
+       
+        steering = Seek(wanderforce) + Seek(seekTarget);
         Move(steering);
 
     }
@@ -128,7 +131,7 @@ public class SteeringBehavior_MCP : MonoBehaviour
         {
             Vector3 randomTarget = new Vector3(UnityEngine.Random.Range(-8f, 8f), (UnityEngine.Random.Range(-5f, 5f)), 0);
             targetsQueue.Enqueue(randomTarget);
-            
+
         }
     }
 
@@ -138,14 +141,14 @@ public class SteeringBehavior_MCP : MonoBehaviour
         while (true)
         {
 
-            yield return new WaitForSeconds(timeW);
 
 
             if (targetsQueue.Count == 0) FillQueue();
 
             targetwander = targetsQueue.Dequeue();
-            sp.position = targetwander;
+            //sp.position = targetwander;
 
+            yield return new WaitForSeconds(timeW);
         }
 
     }
@@ -154,10 +157,11 @@ public class SteeringBehavior_MCP : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(timeA);
             float angle = UnityEngine.Random.Range(-50, 50);
             anglec = angle;
+            yield return new WaitForSeconds(timeA);
         }
     }
+
 
 }
